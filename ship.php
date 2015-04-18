@@ -6,11 +6,13 @@
  * Represnets a ship.  Used by board.
  *
  */
-class ship {
-	var $coordinates;
-    var $length;
+class Ship 
+{
+	private $coordinates;
+    private $length;
 
-    public static function initNewShip($length, $col, $row) {
+    public static function initNewShip($length, $col, $row) 
+    {
         $inst = new self();
         $coord = $inst->generateCoords($length, $col, $row);
         $inst->setCoordinates($coord);
@@ -18,7 +20,8 @@ class ship {
         return $inst;
     }
 
-    public static function initWithCoord($coordinates) {
+    public static function initWithCoord($coordinates) 
+    {
         $inst = new self();
         $inst->setCoordinates($coordinates);
         $inst->setLength(count($coordinates));
@@ -26,16 +29,20 @@ class ship {
     }
 
     // Getters/Setters
-    public function getLength() {
+    public function getLength() 
+    {
         return $this->length;
     }
-    public function setLength($len) {
+    public function setLength($len) 
+    {
         $this->length = $len;
     }
-    public function getCoordinates() {
+    public function getCoordinates() 
+    {
         return $this->coordinates;
     }
-    public function setCoordinates($coord) {
+    public function setCoordinates($coord) 
+    {
         $this->coordinates = $coord;
     }
 
@@ -52,7 +59,8 @@ class ship {
      *  @param int $max_row_
      *
      */
-    public function generateCoords($len, $max_col, $max_row) {
+    public function generateCoords($len, $max_col, $max_row) 
+    {
         $is_horiz = (rand(0,1));
         $start = ($is_horiz) ? array(rand(1, $max_col - $len), rand(1, $max_row)) : array( rand(1, $max_col), rand(1, $max_row - $len));	
 
@@ -79,7 +87,8 @@ class ship {
      * @param $other_ship array
      *
      */
-    public function overlapsWith($other_ship) {
+    public function overlapsWith($other_ship) 
+    {
         foreach ($other_ship->getCoordinates() as $ship_coord) {
             if ($this->overlaps($ship_coord)) {
                 return true;
@@ -95,7 +104,8 @@ class ship {
      * @param $coord array
      *
      */
-    public function overlaps($coord) {
+    public function overlaps($coord) 
+    {
         foreach ($this->getCoordinates() as $s_coord) {
             if ($coord === $s_coord) {
                 return true;
@@ -109,7 +119,8 @@ class ship {
      * 
      * @param $hits array
      */
-    public function isSunk($hits) {
+    public function isSunk($hits) 
+    {
         $total_hits = 0;
         foreach ($this->getCoordinates() as $s_coord) {
             foreach ($hits as $hit) {

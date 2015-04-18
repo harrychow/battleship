@@ -7,19 +7,20 @@ require_once('ship.php');
  * @TODO: Refactor and move static values into constants
  *
  */
-class board {
+class Board 
+{
+	private $matrix;
+	private $head_col;
+	private $head_row;
+	private $ships;
+	private $rows;
+	private $cols;
+    private $hits; 
+    private $miss;
+    private $show_ships_only;
 
-	var $matrix;
-	var $head_col;
-	var $head_row;
-	var $ships;
-	var $rows;
-	var $cols;
-    var $hits; 
-    var $miss;
-    var $show_ships_only;
-
-	public function __construct() {
+    public function __construct() 
+    {
 		$this->head_col = range('A', 'J');
 		$this->head_row = range(1,9);
 		$this->head_row[] = 0;
@@ -38,54 +39,66 @@ class board {
      *  
      */
 
-    public function setShips($ships) {
+    public function setShips($ships) 
+    {
         $this->ships = $ships;
     }
 
-    public function showShipsOnly() {
+    public function showShipsOnly() 
+    {
         return $this->show_ships_only;
     }
 
-    public function setShowShipsOnly($show) {
+    public function setShowShipsOnly($show) 
+    {
         $this->show_ships_only = $show;
     }
 
-    public function getShips() {
+    public function getShips() 
+    {
         return $this->ships;
     }
 
-    public function setMiss($miss) {
+    public function setMiss($miss) 
+    {
         $this->miss = $miss;
     }
 
-    public function addMiss($miss) {
+    public function addMiss($miss) 
+    {
         $m = $this->miss;
         $key = $miss[0].$miss[1];
         $m[$key] = $miss;
         $this->miss = $m;
     }
 
-    public function getMiss() {
+    public function getMiss() 
+    {
         return $this->miss;
     }
 
-    public function setHits($hits) {
+    public function setHits($hits) 
+    {
         $this->hits = $hits;
     }
 
-    public function addHits($hits) {
+    public function addHits($hits) 
+    {
         $this->hits[$hits[0].$hits[1]] = $hits;
     }
 
-    public function getHits() {
+    public function getHits() 
+    {
         return $this->hits;
     }
 
-    public function getAttempts() {
+    public function getAttempts() 
+    {
         return count($this->getHits()) + count($this->getMiss());
     }
 
-    public function getSuccessHits() {
+    public function getSuccessHits() 
+    {
         return count($this->getHits());
     }
 
@@ -97,7 +110,8 @@ class board {
      *  Initilaizer with a new board
      *
      */
-    public static function initBlankBoard() {
+    public static function initBlankBoard() 
+    {
         $inst = new self();
         $ships = $inst->setupShips(array(4,4,5));
         $inst->setShips($ships);
@@ -108,7 +122,8 @@ class board {
      *  Initializer with saved values
      *
      */
-    public static function initWithSavedValues() {
+    public static function initWithSavedValues() 
+    {
         $curr_board = json_decode($_COOKIE['harry_chow_battleship'], true);
         $ships = $curr_board['ships'];
         $hits = $curr_board['hits'];
@@ -120,8 +135,9 @@ class board {
         $inst->setMiss($miss);
         $ship_objs = array();
         foreach ($ships as $s_coord) {
-            $ship_objs[] = ship::initWithCoord($s_coord);
+            $ship_objs[] = Ship::initWithCoord($s_coord);
         }
+
         $inst->setShips($ship_objs);
         return $inst;
     }
@@ -131,7 +147,8 @@ class board {
      * Save the state of the board to browser cookie
      *
      */
-    public function save() {
+    public function save() 
+    {
         $setup = array(
             'ships' => $this->getShipsCoordinates(),
             'hits' => $this->getHits(),
@@ -147,7 +164,8 @@ class board {
      * @param $coordinate array
      *
      */
-    private function outputElem($coordinate) {
+    private function outputElem($coordinate) 
+    {
         // Check if it's a ship
         // Check if it's a "show_ship_only"
         // Check if it's a miss
@@ -179,7 +197,8 @@ class board {
      * Returns the HTML of the grid table
      *
      */
-	public function outputHTML() {
+	public function outputHTML() 
+    {
 
 		$grid = '<table>';
 		$x = 0;
@@ -190,12 +209,12 @@ class board {
 			while ($y <= $this->rows) {
 				if ($x == 0 && $y> 0) {
 					$grid .= "<td>".$this->head_col[$y-1]."</td>";
-				} elseif ($x > 0 && $y == 0) {
+                } elseif ($x > 0 && $y == 0) {
 					$grid .= "<th>".$this->head_row[$x-1]."</th>";
-				} elseif ($x > 0 && $y > 0) {
+                } elseif ($x > 0 && $y > 0) {
 					$grid .= "<td>".$this->outputElem(array($x,$y))."</td>";
                     //echo "$x,$y<br>";
-				}	
+				}
 				$y++;
 			}
 
@@ -212,7 +231,8 @@ class board {
      *
      * @param $coord array
      */
-    private function isValidCoord($coord) {
+    private function isValidCoord($coord) 
+    {
         // Is only 2 characters
         if (empty($coord)) return false;
 
@@ -233,13 +253,17 @@ class board {
      * @param $coord array
      *
      */
-    private function convertCoord($coord) {
+    private function convertCoord($coord) 
+    {
         $int_coord = ($coord[1] == 0) ? 10 : $coord[1];
         $col_map = array_flip($this->head_col);
         $val = array((int)$int_coord, $col_map[strtoupper($coord[0])] + 1);
 
-        if ($val[1] == 0) return $val[0]."10";
-        else return $val;
+        if ($val[1] == 0) {
+            return $val[0]."10";
+        } else {
+            return $val;
+        }
     }
 
     /**
@@ -249,7 +273,8 @@ class board {
      * @param $coord array
      *
      */
-    private function checkHit($coord) {
+    private function checkHit($coord) 
+    {
         foreach ($this->getShips() as $ship) {
             $hit = $ship->overlaps($coord);
             if ($hit) {
@@ -263,7 +288,8 @@ class board {
      *
      * Check if any ship is sunk by this hit
      */
-    public function checkSunkShip($coord) {
+    public function checkSunkShip($coord) 
+    {
         foreach ($this->getShips() as $ship) {
             if ($ship->overlaps($coord)) {
                 return $ship->isSunk($this->getHits());
@@ -279,7 +305,8 @@ class board {
      *  @param $coord array
      *
      */
-	public function enterCoords($coord) {
+	public function enterCoords($coord) 
+    {
         if (!$this->isValidCoord($coord)) {
             return  'Error: Please enter a valid coordinate';
         } else {
@@ -320,18 +347,19 @@ class board {
      * @param $types array
      *
 	 */
-	public function setupShips($types = array()) {
+	public function setupShips($types = array()) 
+    {
 		$ships = array();
 		foreach ($types as $ship_len) {
 			$attempts = 0;
 			$not_found = true;
 			while ($not_found && $attempts < 100) {
 				$attempts++;
-                $ship = ship::initNewShip($ship_len, $this->cols, $this->rows);
+                $ship = Ship::initNewShip($ship_len, $this->cols, $this->rows);
 				$overlaps = $this->shipOverlaps($ship, $ships);
 				if ($overlaps) {
 					unset($ship);
-				} else {
+                } else {
 					$not_found = false;
 					$ships[] = $ship;
 				}
@@ -348,7 +376,8 @@ class board {
      * @param $all_ships array
      *
      */
-    public function shipOverlaps($ship, $all_ships) {
+    public function shipOverlaps($ship, $all_ships) 
+    {
         foreach ($all_ships as $test_s) {
             $overlaps = $test_s->overlapsWith($ship);
             if ($overlaps) {
@@ -364,7 +393,8 @@ class board {
      *
      *  
      */
-	public function getShipsCoordinates() {
+	public function getShipsCoordinates() 
+    {
         $slist = array();
         foreach ($this->ships as $ship) {
             $slist[] = $ship->getCoordinates();
@@ -372,7 +402,6 @@ class board {
 
         return $slist;
 	}
-
 }
 
 ?>
