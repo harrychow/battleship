@@ -21,9 +21,9 @@ class Board
 
     public function __construct() 
     {
-		$this->head_col = range('A', 'J');
-		$this->head_row = range(1,9);
-		$this->head_row[] = 0;
+		$this->head_col = range(1,9);
+		$this->head_row = range('A', 'J');
+		$this->head_col[] = 0;
 		$this->rows = 10;
 		$this->cols = 10;
 		$this->hits = array();
@@ -256,8 +256,8 @@ class Board
     private function convertCoord($coord) 
     {
         $int_coord = ($coord[1] == 0) ? 10 : $coord[1];
-        $col_map = array_flip($this->head_col);
-        $val = array((int)$int_coord, $col_map[strtoupper($coord[0])] + 1);
+        $col_map = array_flip($this->head_row);
+        $val = array($col_map[strtoupper($coord[0])] + 1, (int)$int_coord);
 
         if ($val[1] == 0) {
             return $val[0]."10";
