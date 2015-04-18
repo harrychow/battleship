@@ -9,28 +9,28 @@ require_once('ship.php');
  */
 class Board 
 {
-	private $matrix;
-	private $head_col;
-	private $head_row;
-	private $ships;
-	private $rows;
-	private $cols;
+    private $matrix;
+    private $head_col;
+    private $head_row;
+    private $ships;
+    private $rows;
+    private $cols;
     private $hits; 
     private $miss;
     private $show_ships_only;
 
     public function __construct() 
     {
-		$this->head_col = range(1,9);
-		$this->head_row = range('A', 'J');
-		$this->head_col[] = 0;
-		$this->rows = 10;
-		$this->cols = 10;
-		$this->hits = array();
-		$this->miss = array();
+        $this->head_col = range(1,9);
+        $this->head_row = range('A', 'J');
+        $this->head_col[] = 0;
+        $this->rows = 10;
+        $this->cols = 10;
+        $this->hits = array();
+        $this->miss = array();
         $this->show_ships_only = false;
-		$this->matrix = array_fill(1,$this->rows,array_fill(1,$this->cols,'.'));
-	}
+        $this->matrix = array_fill(1,$this->rows,array_fill(1,$this->cols,'.'));
+    }
 
 
     /**
@@ -197,33 +197,33 @@ class Board
      * Returns the HTML of the grid table
      *
      */
-	public function outputHTML() 
+    public function outputHTML() 
     {
 
-		$grid = '<table>';
-		$x = 0;
-		while ($x <= $this->cols) {
-			$y = 0;
-			$grid .= ($x == 0) ? "<thead><th></th>":"<tr>";
+        $grid = '<table>';
+        $x = 0;
+        while ($x <= $this->cols) {
+            $y = 0;
+            $grid .= ($x == 0) ? "<thead><th></th>":"<tr>";
 
-			while ($y <= $this->rows) {
-				if ($x == 0 && $y> 0) {
-					$grid .= "<td>".$this->head_col[$y-1]."</td>";
+            while ($y <= $this->rows) {
+                if ($x == 0 && $y> 0) {
+                    $grid .= "<td>".$this->head_col[$y-1]."</td>";
                 } elseif ($x > 0 && $y == 0) {
-					$grid .= "<th>".$this->head_row[$x-1]."</th>";
+                    $grid .= "<th>".$this->head_row[$x-1]."</th>";
                 } elseif ($x > 0 && $y > 0) {
-					$grid .= "<td>".$this->outputElem(array($x,$y))."</td>";
+                    $grid .= "<td>".$this->outputElem(array($x,$y))."</td>";
                     //echo "$x,$y<br>";
-				}
-				$y++;
-			}
+                }
+                $y++;
+            }
 
-			$grid .= ($x == 0) ? "</thead>":"</tr>";
-			$x++;
-		}
-		$grid .= "</table>";
-		return $grid;
-	}
+            $grid .= ($x == 0) ? "</thead>":"</tr>";
+            $x++;
+        }
+        $grid .= "</table>";
+        return $grid;
+    }
 
     /**
      *
@@ -305,7 +305,7 @@ class Board
      *  @param $coord array
      *
      */
-	public function enterCoords($coord) 
+    public function enterCoords($coord) 
     {
         if (!$this->isValidCoord($coord)) {
             return  'Error: Please enter a valid coordinate';
@@ -335,9 +335,9 @@ class Board
                 }
             }
         }
-	}
+    }
 
-	/**
+    /**
      * Create ships for board
      *
      * Generates ships of the length given by the types array.  Ships are placed randomly
@@ -346,28 +346,28 @@ class Board
      *
      * @param $types array
      *
-	 */
-	public function setupShips($types = array()) 
+     */
+    public function setupShips($types = array()) 
     {
-		$ships = array();
-		foreach ($types as $ship_len) {
-			$attempts = 0;
-			$not_found = true;
-			while ($not_found && $attempts < 100) {
-				$attempts++;
+        $ships = array();
+        foreach ($types as $ship_len) {
+            $attempts = 0;
+            $not_found = true;
+            while ($not_found && $attempts < 100) {
+                $attempts++;
                 $ship = Ship::initNewShip($ship_len, $this->cols, $this->rows);
-				$overlaps = $this->shipOverlaps($ship, $ships);
-				if ($overlaps) {
-					unset($ship);
+                $overlaps = $this->shipOverlaps($ship, $ships);
+                if ($overlaps) {
+                    unset($ship);
                 } else {
-					$not_found = false;
-					$ships[] = $ship;
-				}
-			}
-		}
+                    $not_found = false;
+                    $ships[] = $ship;
+                }
+            }
+        }
 
-		return $ships;
-	}
+        return $ships;
+    }
 
     /**
      * Checks if a ship overlaps with a list of other ships
@@ -393,7 +393,7 @@ class Board
      *
      *  
      */
-	public function getShipsCoordinates() 
+    public function getShipsCoordinates() 
     {
         $slist = array();
         foreach ($this->ships as $ship) {
@@ -401,7 +401,7 @@ class Board
         }
 
         return $slist;
-	}
+    }
 }
 
 ?>

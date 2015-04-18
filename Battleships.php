@@ -3,13 +3,13 @@
 require_once('board.php');
 if ($_POST) {
     // process the board with the given input
-	// clean get variable, and Validate coordinate
-	$board = Board::initWithSavedValues();
+    // clean get variable, and Validate coordinate
+    $board = Board::initWithSavedValues();
     $status = $board->enterCoords($_POST['coord']);
 } else {
     // create a new board
-	$board = Board::initBlankBoard();
-	$status = "New Game";
+    $board = Board::initBlankBoard();
+    $status = "New Game";
 }
 $board->save();
 

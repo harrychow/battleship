@@ -8,7 +8,7 @@
  */
 class Ship 
 {
-	private $coordinates;
+    private $coordinates;
     private $length;
 
     public static function initNewShip($length, $col, $row) 
@@ -62,7 +62,7 @@ class Ship
     public function generateCoords($len, $max_col, $max_row) 
     {
         $is_horiz = (rand(0,1));
-        $start = ($is_horiz) ? array(rand(1, $max_col - $len), rand(1, $max_row)) : array( rand(1, $max_col), rand(1, $max_row - $len));	
+        $start = ($is_horiz) ? array(rand(1, $max_col - $len), rand(1, $max_row)) : array( rand(1, $max_col), rand(1, $max_row - $len));    
 
         $ship = array($start);
         $inc = 1;
