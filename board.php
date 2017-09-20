@@ -4,6 +4,8 @@ require_once('ship.php');
  * Board Class
  *
  * Represents board of battleship
+ * This class stores all info related to the board (ie. row/col, hits/misses, ships, etc.)
+ *
  * @TODO: Refactor and move static values into constants
  *
  */
@@ -19,7 +21,13 @@ class Board
     private $miss;
     private $show_ships_only;
 
-    public function __construct() 
+
+    /**
+     * Board constructor.
+     *
+     *
+     */
+    public function __construct()
     {
         $this->head_col = range(1,9);
         $this->head_row = range('A', 'J');
@@ -102,12 +110,11 @@ class Board
         return count($this->getHits());
     }
 
-    //***********
-
-
     /**
      *
-     *  Initilaizer with a new board
+     * Initilaizer with a new board
+     *
+     * Static function to generate a new board with ships
      *
      */
     public static function initBlankBoard() 
@@ -120,6 +127,8 @@ class Board
     /**
      *
      *  Initializer with saved values
+     *
+     * Static function to generate board stored in browser cookie
      *
      */
     public static function initWithSavedValues() 
@@ -228,6 +237,10 @@ class Board
     /**
      *
      * Helper function to check if the user inputed value is valid
+     *
+     * Makes sure coordinates entered are
+     *  - alphanumeric
+     *  - longer than 0 length
      *
      * @param $coord array
      */

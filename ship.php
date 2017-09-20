@@ -11,7 +11,19 @@ class Ship
     private $coordinates;
     private $length;
 
-    public static function initNewShip($length, $col, $row) 
+
+    /**
+     * Initializer for new ship
+     *
+     * Create new ship object with given params
+     *
+     * @param $length
+     * @param $col
+     * @param $row
+     *
+     * @return Ship
+     */
+    public static function initNewShip($length, $col, $row)
     {
         $inst = new self();
         $coord = $inst->generateCoords($length, $col, $row);
@@ -20,7 +32,16 @@ class Ship
         return $inst;
     }
 
-    public static function initWithCoord($coordinates) 
+
+    /**
+     * Initializer for new ships with coordinates
+     *
+     * Create new ship object at the given coordinates
+     *
+     * @param $coordinates
+     * @return Ship
+     */
+    public static function initWithCoord($coordinates)
     {
         $inst = new self();
         $inst->setCoordinates($coordinates);
