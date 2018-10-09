@@ -1,0 +1,46 @@
+version: "3"
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+      - "80:80"
+    volumes:
+      - ../:/var/www
+      - ./1-site.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - php-fpm
+
+#  mysql:
+#    image: mysql:5.6
+#    container_name: "mysql-container"
+#    volumes:
+#      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=123
+
+  php-fpm:
+    build: ./php/
+    container_name: "php-container"
+    volumes:
+      - ../battleship:/var/www
+    ports:
+      - "8000:9000"
+      - "9000:9000"
+    expose:
+      - "9000"
+#    links:
+#      - mysql
+#    environment:
+#      - DB_PASSWORD=123
+#      - DB_HOST=db
+#    depends_on:
+#      - mysql
+
+#  mailhog:
+#    image: mailhog/mailhog:v1.0.0
+#    ports:
+#      - "1025:1025"
+#      - "8025:8025"
