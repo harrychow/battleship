@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Battleship</title>
+</head>
+<body>
+<div>** {{ status }} **</div>
+<br />
+<br />
+<div>{{ board }}</div>
+<div>
+    <form name="input" action="Battleships.php" method="POST">
+        Enter coordinates (row, col), e.g. A5 <input type="input" size="5" name="coord" autofocus>
+        <input type="submit">
+    </form>
+</div>
+</body>
+</html>

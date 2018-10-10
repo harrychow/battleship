@@ -1,28 +1,180 @@
 <?php
-require_once('ship.php');
-/**
- * Board Class
- *
- * Represents board of battleship
- * This class stores all info related to the board (ie. row/col, hits/misses, ships, etc.)
- *
- * @TODO: Refactor and move static values into constants
- *
- */
-class Board 
-{
-    private $matrix;
-    private $head_col;
-    private $head_row;
-    private $ships;
-    private $rows;
-    private $cols;
-    private $hits; 
-    private $miss;
-    private $show_ships_only;
 
+namespace App\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="App\Repository\BoardRepository")
+ */
+class Board
+{
+    /**
+     * @ORM\Id()
+     * @ORM\GeneratedValue()
+     * @ORM\Column(type="integer")
+     */
+    private $id;
 
     /**
+     * @ORM\Column(type="array")
+     */
+    private $matrix = [];
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $head_col = [];
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $head_row = [];
+
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $ships = [];
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $rows;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $cols;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $hits = [];
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $miss = [];
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $show_ships_only;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getMatrix(): ?array
+    {
+        return $this->matrix;
+    }
+
+    public function setMatrix(array $matrix): self
+    {
+        $this->matrix = $matrix;
+
+        return $this;
+    }
+
+    public function getHeadCol(): ?array
+    {
+        return $this->head_col;
+    }
+
+    public function setHeadCol(array $head_col): self
+    {
+        $this->head_col = $head_col;
+
+        return $this;
+    }
+
+    public function getHeadRow(): ?array
+    {
+        return $this->head_row;
+    }
+
+    public function setHeadRow(array $head_row): self
+    {
+        $this->head_row = $head_row;
+
+        return $this;
+    }
+
+    public function getShips(): ?array
+    {
+        return $this->ships;
+    }
+
+    public function setShips(array $ships): self
+    {
+        $this->ships = $ships;
+
+        return $this;
+    }
+
+    public function getRows(): ?int
+    {
+        return $this->rows;
+    }
+
+    public function setRows(int $rows): self
+    {
+        $this->rows = $rows;
+
+        return $this;
+    }
+
+    public function getCols(): ?int
+    {
+        return $this->cols;
+    }
+
+    public function setCols(int $cols): self
+    {
+        $this->cols = $cols;
+
+        return $this;
+    }
+
+    public function getHits(): ?array
+    {
+        return $this->hits;
+    }
+
+    public function setHits(?array $hits): self
+    {
+        $this->hits = $hits;
+
+        return $this;
+    }
+
+    public function getMiss(): ?array
+    {
+        return $this->miss;
+    }
+
+    public function setMiss(?array $miss): self
+    {
+        $this->miss = $miss;
+
+        return $this;
+    }
+
+    public function getShowShipsOnly(): ?bool
+    {
+        return $this->show_ships_only;
+    }
+
+    public function setShowShipsOnly(bool $show_ships_only): self
+    {
+        $this->show_ships_only = $show_ships_only;
+
+        return $this;
+    }
+
+     /**
      * Board constructor.
      *
      *
@@ -41,38 +193,7 @@ class Board
     }
 
 
-    /**
-     *
-     * Getters/Setters
-     *  
-     */
-
-    public function setShips($ships) 
-    {
-        $this->ships = $ships;
-    }
-
-    public function showShipsOnly() 
-    {
-        return $this->show_ships_only;
-    }
-
-    public function setShowShipsOnly($show) 
-    {
-        $this->show_ships_only = $show;
-    }
-
-    public function getShips() 
-    {
-        return $this->ships;
-    }
-
-    public function setMiss($miss) 
-    {
-        $this->miss = $miss;
-    }
-
-    public function addMiss($miss) 
+    public function addMiss($miss)
     {
         $m = $this->miss;
         $key = $miss[0].$miss[1];
@@ -80,35 +201,21 @@ class Board
         $this->miss = $m;
     }
 
-    public function getMiss() 
-    {
-        return $this->miss;
-    }
-
-    public function setHits($hits) 
-    {
-        $this->hits = $hits;
-    }
-
-    public function addHits($hits) 
+    public function addHits($hits)
     {
         $this->hits[$hits[0].$hits[1]] = $hits;
     }
 
-    public function getHits() 
-    {
-        return $this->hits;
-    }
-
-    public function getAttempts() 
+    public function getAttempts()
     {
         return count($this->getHits()) + count($this->getMiss());
     }
 
-    public function getSuccessHits() 
+    public function getSuccessHits()
     {
         return count($this->getHits());
     }
+
 
     /**
      *
@@ -117,7 +224,7 @@ class Board
      * Static function to generate a new board with ships
      *
      */
-    public static function initBlankBoard() 
+    public static function initBlankBoard()
     {
         $inst = new self();
         $ships = $inst->setupShips(array(4,4,5));
@@ -131,7 +238,7 @@ class Board
      * Static function to generate board stored in browser cookie
      *
      */
-    public static function initWithSavedValues() 
+    public static function initWithSavedValues()
     {
         $curr_board = json_decode($_COOKIE['harry_chow_battleship'], true);
         $ships = $curr_board['ships'];
@@ -156,7 +263,7 @@ class Board
      * Save the state of the board to browser cookie
      *
      */
-    public function save() 
+    public function save()
     {
         $setup = array(
             'ships' => $this->getShipsCoordinates(),
@@ -167,13 +274,13 @@ class Board
 
     /**
      *
-     * Helper function to process each point on the grid, and return the 
+     * Helper function to process each point on the grid, and return the
      * correct display
      *
      * @param $coordinate array
      *
      */
-    private function outputElem($coordinate) 
+    private function outputElem($coordinate)
     {
         // Check if it's a ship
         // Check if it's a "show_ship_only"
@@ -206,7 +313,7 @@ class Board
      * Returns the HTML of the grid table
      *
      */
-    public function outputHTML() 
+    public function outputHTML()
     {
 
         $grid = '<table>';
@@ -244,7 +351,7 @@ class Board
      *
      * @param $coord array
      */
-    private function isValidCoord($coord) 
+    private function isValidCoord($coord)
     {
         // Is only 2 characters
         if (empty($coord)) return false;
@@ -254,7 +361,7 @@ class Board
         if ($len) {
             $int = (ctype_digit($coord[1]));
             $alpha = (ctype_alpha($coord[0]));
-            $less_than_j = (strcasecmp($coord[0], 'K') < 0); 
+            $less_than_j = (strcasecmp($coord[0], 'K') < 0);
         }
         return (($len && $int && $alpha && $less_than_j) || $show);
     }
@@ -266,7 +373,7 @@ class Board
      * @param $coord array
      *
      */
-    private function convertCoord($coord) 
+    private function convertCoord($coord)
     {
         $int_coord = ($coord[1] == 0) ? 10 : $coord[1];
         $col_map = array_flip($this->head_row);
@@ -286,7 +393,7 @@ class Board
      * @param $coord array
      *
      */
-    private function checkHit($coord) 
+    private function checkHit($coord)
     {
         foreach ($this->getShips() as $ship) {
             $hit = $ship->overlaps($coord);
@@ -301,7 +408,7 @@ class Board
      *
      * Check if any ship is sunk by this hit
      */
-    public function checkSunkShip($coord) 
+    public function checkSunkShip($coord)
     {
         foreach ($this->getShips() as $ship) {
             if ($ship->overlaps($coord)) {
@@ -318,7 +425,7 @@ class Board
      *  @param $coord array
      *
      */
-    public function enterCoords($coord) 
+    public function enterCoords($coord)
     {
         if (!$this->isValidCoord($coord)) {
             return  'Error: Please enter a valid coordinate';
@@ -360,7 +467,7 @@ class Board
      * @param $types array
      *
      */
-    public function setupShips($types = array()) 
+    public function setupShips($types = array())
     {
         $ships = array();
         foreach ($types as $ship_len) {
@@ -389,7 +496,7 @@ class Board
      * @param $all_ships array
      *
      */
-    public function shipOverlaps($ship, $all_ships) 
+    public function shipOverlaps($ship, $all_ships)
     {
         foreach ($all_ships as $test_s) {
             $overlaps = $test_s->overlapsWith($ship);
@@ -404,9 +511,9 @@ class Board
     /**
      *  Returns the list of ship's coordinates on the board
      *
-     *  
+     *
      */
-    public function getShipsCoordinates() 
+    public function getShipsCoordinates()
     {
         $slist = array();
         foreach ($this->ships as $ship) {
@@ -415,6 +522,5 @@ class Board
 
         return $slist;
     }
-}
 
-?>
+}

@@ -1,6 +1,6 @@
 <?php
 
-require_once('board.php');
+require_once('bk_board.php');
 if ($_POST) {
     // process the board with the given input
     // clean get variable, and Validate coordinate
