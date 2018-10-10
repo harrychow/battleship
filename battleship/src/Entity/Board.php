@@ -174,6 +174,12 @@ class Board
         return $this;
     }
 
+
+    public function showShipsOnly()
+    {
+        return $this->show_ships_only;
+    }
+
      /**
      * Board constructor.
      *

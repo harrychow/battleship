@@ -8,12 +8,12 @@
 <div>** {{ status }} **</div>
 <br />
 <br />
-<div>{{ board }}</div>
+{{ board | raw }}
 <div>
-    <form name="input" action="Battleships.php" method="POST">
-        Enter coordinates (row, col), e.g. A5 <input type="input" size="5" name="coord" autofocus>
-        <input type="submit">
-    </form>
+    <span>Enter coordinates (row, col), e.g. A5</span>
+    {{ form_start(form)}}
+    {{ form_widget(form)}}
+    {{ form_end(form)}}
 </div>
 </body>
 </html>
