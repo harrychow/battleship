@@ -25,10 +25,8 @@ class PlayController extends Controller
      */
     public function index(Request $request)
     {
-        // A blank ship to create the form with
-        $ship = new Ship();
-        $form = $this->createFormBuilder($ship)
-            ->add('coordinates', TextType::class)
+        $form = $this->createFormBuilder()
+            ->add('coord', TextType::class, array('required' => true, 'label' => 'Coordinates') )
             ->add('submit', SubmitType::class, array('label' => 'Submit'))
             ->getForm();
 
@@ -37,21 +35,26 @@ class PlayController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             // process the board with the given input
             // clean get variable, and Validate coordinate
-            $board = Board::initWithSavedValues();
-            $status = $board->enterCoords($_POST['coord']);
+            $curr_board = json_decode($request->cookies->get('harry_chow_battleship'), true);
+            $board = Board::initWithSavedValues($curr_board);
+            $form_data = $form->getData();
+            $status = $board->enterCoords($form_data['coord']);
         } else {
             // create a new board
             $board = Board::initBlankBoard();
             $status = "New Game";
         }
 
-//        $board->save();
 
-        return $this->render('play/play.html.twig', [
+        $response = $this->render('play/play.html.twig', [
             'controller_name' => 'PlayController',
             'status' => $status,
             'board' => $board->outputHTML(),
             'form' => $form->createView()
         ]);
+
+        $board->save($response);
+
+        return $response;
     }
 }

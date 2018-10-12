@@ -4,6 +4,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Component\HttpFoundation\Cookie;
+
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BoardRepository")
  */
@@ -243,10 +246,11 @@ class Board
      *
      * Static function to generate board stored in browser cookie
      *
+     * @param array $curr_board Array of values that represent the board
+     *
      */
-    public static function initWithSavedValues()
+    public static function initWithSavedValues($curr_board = array())
     {
-        $curr_board = json_decode($_COOKIE['harry_chow_battleship'], true);
         $ships = $curr_board['ships'];
         $hits = $curr_board['hits'];
         $miss = $curr_board['miss'];
@@ -268,14 +272,18 @@ class Board
      *
      * Save the state of the board to browser cookie
      *
+     * @param Response Response object to append cookie to
+     *
      */
-    public function save()
+    public function save($response)
     {
         $setup = array(
             'ships' => $this->getShipsCoordinates(),
             'hits' => $this->getHits(),
             'miss' => $this->getMiss());
-        return setcookie("harry_chow_battleship", json_encode($setup));
+
+        $cookie = new Cookie('harry_chow_battleship', json_encode($setup));
+        return $response->headers->setCookie($cookie);
     }
 
     /**

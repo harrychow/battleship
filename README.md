@@ -11,6 +11,11 @@ random with the following sizes:
 - 1 x Battleship (5 squares)  
 - 2 x Destroyers (4 squares)  
 
+
+Docker Setup
+
+Main page is at: localhost:8081/play
+
 Ships can touch but they must not overlap.  
 The application should accept input from the user in the format “A5” to signify a square 
 to target, and feedback to the user whether the shot was success, miss, and additionally 
